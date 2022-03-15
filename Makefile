@@ -1,7 +1,5 @@
-# $Id: Makefile,v 1.46 2017/04/05 19:14:07 tomas Exp $
-
 PKG= dado
-V= 1.8.3
+V= 2.0.0
 DIST_DIR= $(PKG)-$V
 HTMLS= doc/dado.png doc/index.html doc/license.html doc/examples.html
 BR_HTMLS= doc/br/dado.png doc/br/index.html doc/br/license.html doc/br/examples.html
