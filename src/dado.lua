@@ -67,21 +67,20 @@ function M.do_commit (self, func, ...)
 		-- use driver's own implementation
 		return self.conn:do_commit (func, ...)
 	end
-	local db = self.conn
-	local tdb = type (db)
+	local tdb = type (self)
 	assert (tdb == "table", "bad argument #1 to 'do_commit' (Dado connection expected, got '"..tdb.."')")
-	local tconn = type (db.conn)
+	local tconn = type (self.conn)
 	assert (tconn == "userdata",
 		"bad argument #1 to 'do_commit' (LuaSQL connection expected at 'conn' entry, got '"..tconn.."')")
 	local tf = type (func)
 	assert (tf, "bad argument #2 to 'do_commit' (function expected , got '"..tf.."')")
 	-- Transaction
-	db:setautocommit (false)
-	local res = { xpcall (func, traceback, db, ...) }
+	self:setautocommit (false)
+	local res = { xpcall (func, traceback, self, ...) }
 	if res[1] then -- success!
-		db:commit ()
+		self:commit ()
 	end
-	db:setautocommit (true) -- failure
+	self:setautocommit (true) -- failure
 	return tunpack (res)
 end
 
@@ -97,18 +96,17 @@ function M.do_rollback (self, func, ...)
 		-- use driver's own implementation
 		return self.conn:do_rollback (func, ...)
 	end
-	local db = self.conn
-	local tdb = type(db)
+	local tdb = type(self)
 	assert (tdb == "table", "bad argument #1 to 'do_rollback' (Dado connection expected, got '"..tdb.."')")
-	local tconn = type(db.conn)
+	local tconn = type(self.conn)
 	assert (tconn == "userdata",
 		"bad argument #1 to 'do_rollback' (LuaSQL connection expected at 'conn' entry, got '"..tconn.."')")
 	local tf = type(func)
 	assert (tf, "bad argument #2 to 'do_rollback' (function expected , got '"..tf.."')")
 	-- Transaction
-	db:setautocommit (false)
-	local res = { xpcall (func, traceback, db, ...) }
-	db:setautocommit (true) -- undo everything
+	self:setautocommit (false)
+	local res = { xpcall (func, traceback, self, ...) }
+	self:setautocommit (true) -- undo everything
 	return tunpack (res)
 end
 
