@@ -3,7 +3,7 @@
 local dbobj = require"dado.object"
 local dado = require"dado"
 local dbname = arg[1] or "luasql-test"
-local user = arg[2]
+local user = arg[2] or "postgres"
 local pass = arg[3]
 local driver = arg[4]
 
@@ -27,7 +27,7 @@ db:insert ("pessoa", { id = 2, nome = "Beltrano", email = "beltrano@cafundo.com"
 io.write"."
 
 -- Definindo a classe
-Pessoa = dbobj:class {
+local Pessoa = dbobj:class {
 	table_name = "pessoa",
 	key_name = { "id" },
 	alternate_keys = {
@@ -85,7 +85,7 @@ local function get_nome_email (self, attr)
 	self.nome, self.email = self.__dado:select ("nome, email", "pessoa", "id = "..self.id_pessoa)()
 	return rawget (self, attr)
 end
-Professor = Pessoa:class {
+local Professor = Pessoa:class {
 	table_name = "professor",
 	key_name = { "id" },
 	alternate_keys = {
