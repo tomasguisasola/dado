@@ -3,7 +3,7 @@
 <html>
 <head>
 	<title>Dado: Facilidades sobre a LuaSQL</title>
-    <link rel="stylesheet" href="https://keplerproject.github.io/luasql/doc.css" type="text/css"/>
+    <link rel="stylesheet" href="http://lunarmodules.github.io/luasql/doc.css" type="text/css"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
@@ -17,7 +17,7 @@
 	<div id="product_name"><big><b>Dado</b></big></div>
 	<div id="product_description">Facilidades sobre a LuaSQL</div>
     <div id="product_languages" align="right"><small>
-        <a href="../examples.html">english</a>&middot;portugu&ecirc;s
+        <a href="../examples.html">english</a>&middot;português
     </small></div>
 </div> <!-- id="product" -->
 
@@ -28,17 +28,17 @@
 	<ul>
 		<li><a href="index.html">Home</a>
 			<ul>
-				<li><a href="index.html#overview">Vis&atilde;o Geral</a></li>
+				<li><a href="index.html#overview">Visão Geral</a></li>
 				<li><a href="index.html#status">Status</a></li>
 				<li><a href="index.html#download">Download</a></li>
-				<li><a href="index.html#install">Instala&ccedil;&atilde;o</a></li>
+				<li><a href="index.html#install">Instalação</a></li>
 				<li><a href="index.html#manual">Manual</a></li>
-		        <li><a href="index.html#history">Hist&oacute;rico</a></li>
-				<li><a href="index.html#credits">Cr&eacute;ditos</a></li>
+		        <li><a href="index.html#history">Histórico</a></li>
+				<li><a href="index.html#credits">Créditos</a></li>
 				<li><a href="index.html#contact">Fale conosco</a></li>
 			</ul>
 		</li>
-		<li><a href="license.html">Licen&ccedil;a</a></li>
+		<li><a href="license.html">Licença</a></li>
 		<li><strong>Exemplos</strong></li>
 	</ul>
 </div> <!-- id="navigation" -->
@@ -48,12 +48,12 @@
 <h2><a name="examples"></a>Exemplos</h2>
 
 <p>
-O exemplo abaixo mostra o uso b&aacute;sico do pacote.
+O exemplo abaixo mostra o uso básico do pacote.
 </p>
 <pre class="example">
 local dado = require"dado"
 db = dado.connect ("dbname", "username")
-db.conn:execute ("drop table mytable") -- uso direto da LuaSQL, para que o comando possa falhar sem interromper a execu&ccedil;&atilde;o.
+db.conn:execute ("drop table mytable") -- uso direto da LuaSQL, para que o comando possa falhar sem interromper a execução.
 db:assertexec [[
 create table mytable (
 	key     integer,
@@ -97,18 +97,18 @@ end
 </pre>
 
 <p>
-O exemplo seguinte mostra como usar uma conex&atilde;o j&aacute; aberta.
+O exemplo seguinte mostra como usar uma conexão já aberta.
 </p>
 <pre class="example">
 env = luasql.postgres()
 conn = env:connect ("dbname", "username")
 
 new_db = dado.wrap_connection (conn)
--- use new_db como uma conex&atilde;o Dado como outra qualquer
+-- use new_db como uma conexão Dado como outra qualquer
 </pre>
 
 <p>
-O m&oacute;dulo <a href="luadoc/modules/dado.sql.html">dado.sql</a> pode facilitar/encurtar a escrita de certas constru&ccedil;&otilde;es.
+O módulo <a href="luadoc/modules/dado.sql.html">dado.sql</a> pode facilitar/encurtar a escrita de certas construções.
 </p>
 <pre class="example">
 dado = require"dado"
@@ -125,15 +125,31 @@ for field1, field2 in db:select ("field1, field2", "mytable", cond)() do
 end
 </pre>
 
+<p>
+As funções <a href="luadoc/modules/dado.html#docommit">docommit</a> e <a href="luadoc/modules/dado.html#dorollback">dorollback</a> oferecem uma forma de executar uma sequência de comandos (Lua) dentro de uma transação do banco de dados, tomando cuidado no caso de algum erro.
+Se um erro ocorrer, a transação é desfeita automaticamente.
+</p>
+<pre class="example">
+local ok, errmsg = db:docommit (function (dbconn)
+	dbconn:insert ("tabela", {
+		key = key + 1,
+		field1 = "val4",
+		field2 = "val42",
+	})
+end)
+if ok then
+	-- O trecho de código executou com sucesso e as operações foram confirmadas no banco de dados
+else
+	-- Houve um erro, as operações no banco foram desfeitas e a variável errmsg tem mais informações sobre o erro
+end
+</pre>
+
 </div> <!-- id="content" -->
 
 </div> <!-- id="main" -->
 
 <div id="about">
 	<p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" /></a></p>
-	<p><small>
-		$Id: examples.html,v 1.5 2017/04/03 18:01:31 tomas Exp $
-	</small></p>
 </div> <!-- id="about" -->
 
 </div> <!-- id="container" -->

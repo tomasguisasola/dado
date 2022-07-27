@@ -17,7 +17,7 @@
 	<div id="product_name"><big><b>Dado</b></big></div>
 	<div id="product_description">Database Facilities for LuaSQL</div>
     <div id="product_languages" align="right"><small>
-        english&middot;<a href="br/examples.html">portugu&ecirc;s</a>
+        english&middot;<a href="br/examples.html">português</a>
     </small></div>
 </div> <!-- id="product" -->
 
@@ -122,6 +122,25 @@ cond = sql.AND {
 
 for field1, field2 in db:select ("field1, field2", "mytable", cond)() do
 	print (field1, field2)
+end
+</pre>
+
+<p>
+Functions <a href="luadoc/modules/dado.html#docommit">docommit</a> and <a href="luadoc/modules/dado.html#dorollback">dorollback</a> provide a facility to run a sequence of commands (in fact, Lua statements) inside a transaction and taking care of any error.
+If an error occurs, a database rollback is automatically applied.
+</p>
+<pre class="example">
+local ok, errmsg = db:docommit (function (dbconn)
+	dbconn:insert ("tabela", {
+		key = key + 1,
+		field1 = "val4",
+		field2 = "val42",
+	})
+end)
+if ok then
+	-- The code run successfully and the commit was applied
+else
+	-- There was an error, the operations were rolled back and variable errmsg has more information on the error
 end
 </pre>
 
