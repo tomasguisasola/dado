@@ -183,9 +183,9 @@ end
 
 --------------------------------------------------------------------------------
 return {
-	_COPYRIGHT = "Copyright (C) 2008-2017 PUC-Rio",
+	_COPYRIGHT = "Copyright (C) 2008-2022 PUC-Rio",
 	_DESCRIPTION = "SQL is a collection of functions to create SQL statements",
-	_VERSION = "Dado SQL 1.8.3",
+	_VERSION = "Dado SQL 2.0.0",
 
 	quote = quote,
 	quotedconcat = quotedconcat,
