@@ -61,7 +61,7 @@ end
 -- @param self Dado Object.
 -- @param func Function to be executed inside the transaction (its first
 --	argument will be the connection object).
--- @param ... Other arguments to the function.
+-- @param ... Other arguments to the function (after the connection object).
 --------------------------------------------------------------------------------
 function M.docommit (self, func, ...)
 	local tdb = type (self)
@@ -92,7 +92,7 @@ end
 -- @param self Dado Object.
 -- @param func Function to be executed inside the transaction (its first
 --	argument will be the connection object).
--- @param ... Other arguments to the function.
+-- @param ... Other arguments to the function (after the connection object).
 --------------------------------------------------------------------------------
 function M.dorollback (self, func, ...)
 	local tdb = type(self)
