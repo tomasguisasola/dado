@@ -56,24 +56,26 @@ function M.setautocommit (self, bool)
 end
 
 --------------------------------------------------------------------------------
--- Call a function with parameters inside a transaction and commit the
+-- Call a function with arguments inside a transaction and commit the
 --	operations in case of success.
 -- @param self Dado Object.
--- @param func Function to be executed inside the transaction.
+-- @param func Function to be executed inside the transaction (its first
+--	argument will be the connection object).
 -- @param ... Other arguments to the function.
 --------------------------------------------------------------------------------
-function M.do_commit (self, func, ...)
-	if self.conn.do_commit then
-		-- use driver's own implementation
-		return self.conn:do_commit (func, ...)
-	end
+function M.docommit (self, func, ...)
 	local tdb = type (self)
-	assert (tdb == "table", "bad argument #1 to 'do_commit' (Dado connection expected, got '"..tdb.."')")
+	assert (tdb == "table", "bad argument #1 to 'docommit' (Dado connection expected, got '"..tdb.."')")
 	local tconn = type (self.conn)
 	assert (tconn == "userdata",
-		"bad argument #1 to 'do_commit' (LuaSQL connection expected at 'conn' entry, got '"..tconn.."')")
+		"bad argument #1 to 'docommit' (LuaSQL connection expected at 'conn' entry, got '"..tconn.."')")
+	if self.conn.docommit then
+		-- use driver's own implementation
+		return self.conn:docommit (func, ...)
+	end
+
 	local tf = type (func)
-	assert (tf, "bad argument #2 to 'do_commit' (function expected , got '"..tf.."')")
+	assert (tf == "function", "bad argument #2 to 'docommit' (function expected , got '"..tf.."')")
 	-- Transaction
 	self:setautocommit (false)
 	local res = { xpcall (func, traceback, self, ...) }
@@ -88,21 +90,23 @@ end
 -- Call a function with parameters inside a transaction and rollback the
 --	operations anyway.
 -- @param self Dado Object.
--- @param func Function to be executed inside the transaction.
+-- @param func Function to be executed inside the transaction (its first
+--	argument will be the connection object).
 -- @param ... Other arguments to the function.
 --------------------------------------------------------------------------------
-function M.do_rollback (self, func, ...)
-	if self.conn.do_rollback then
-		-- use driver's own implementation
-		return self.conn:do_rollback (func, ...)
-	end
+function M.dorollback (self, func, ...)
 	local tdb = type(self)
-	assert (tdb == "table", "bad argument #1 to 'do_rollback' (Dado connection expected, got '"..tdb.."')")
+	assert (tdb == "table", "bad argument #1 to 'dorollback' (Dado connection expected, got '"..tdb.."')")
 	local tconn = type(self.conn)
 	assert (tconn == "userdata",
-		"bad argument #1 to 'do_rollback' (LuaSQL connection expected at 'conn' entry, got '"..tconn.."')")
+		"bad argument #1 to 'dorollback' (LuaSQL connection expected at 'conn' entry, got '"..tconn.."')")
+	if self.conn.dorollback then
+		-- use driver's own implementation
+		return self.conn:dorollback (func, ...)
+	end
+
 	local tf = type(func)
-	assert (tf, "bad argument #2 to 'do_rollback' (function expected , got '"..tf.."')")
+	assert (tf == "function", "bad argument #2 to 'dorollback' (function expected , got '"..tf.."')")
 	-- Transaction
 	self:setautocommit (false)
 	local res = { xpcall (func, traceback, self, ...) }
