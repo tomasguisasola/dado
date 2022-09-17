@@ -190,7 +190,7 @@ end
 return {
 	_COPYRIGHT = "Copyright (C) 2008-2022 PUC-Rio",
 	_DESCRIPTION = "Database Object is a library to create classes and objects associated with database tables and rows",
-	_VERSION = "Dado Object 2.0.0",
+	_VERSION = "Dado Object 2.1.0",
 
 	db_identification = db_identification,
 	new = new,

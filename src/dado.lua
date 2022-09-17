@@ -15,7 +15,7 @@ local assert, error, pcall, require, setmetatable, tostring, type, xpcall
 local M = {
 	_COPYRIGHT = "Copyright (C) 2008-2022 PUC-Rio",
 	_DESCRIPTION = "Dado is a set of facilities implemented over LuaSQL connection objects",
-	_VERSION = "Dado 2.0.0",
+	_VERSION = "Dado 2.1.0",
 }
 
 --------------------------------------------------------------------------------

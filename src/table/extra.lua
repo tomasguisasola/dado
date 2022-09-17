@@ -121,7 +121,7 @@ end
 return setmetatable ({
 	_COPYRIGHT = "Copyright (C) 2008-2022 PUC-Rio",
 	_DESCRIPTION = "Table Extra contains some functions used to manipulate tables by other Dado modules",
-	_VERSION = "Table Extra 2.0.0",
+	_VERSION = "Table Extra 2.1.0",
 
 	fullconcat = fullconcat,
 	pfullconcat = pfullconcat,

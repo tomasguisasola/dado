@@ -81,7 +81,7 @@ columns, or classes that are not related to only one database table.
 <h2><a name="status"></a>Status</h2>
 
 <p>
-Current version is 2.0.0.
+Current version is 2.1.0.
 It was developed for to run in all Lua 5.X versions.
 <!--It should run in Lua 5.3 also, although only the modules <code>dado.sql</code> and <code>table.extra</code> were tested (the other ones require LuaSQL which was not available for Lua 5.3 at the time of this release).-->
 </p>
@@ -115,6 +115,10 @@ The <a href="luadoc/index.html">API</a> is documented with LDoc.
 <h2><a name="history"></a>History</h2>
 
 <ul>
+    <li>[17/sep/2022] Version 2.1.0 released<ul>
+        <li>Improvement in function <a href="luadoc/modules/dado.sql.html#AND"><code>dado.sql.AND</code></a> to allow that an array value associated with a key represents the values of a IN-expression.</li>
+        <li>Adding inheritance mechanism to module <a href="luadoc/modules/table.extra.html"><code>table.extra</code></a>, in order to allow it to "replace" the original <code>table</code> library.</li>
+    </ul></li>
     <li>[27/jul/2022] Version 2.0.0 released<br/>
         Adding functions <a href="luadoc/modules/dado.html#docommit"><code>dado.docommit</code></a> and <a href="luadoc/modules/dado.html#dorollback"><code>dado.dorollback</code></a></li>
     <li>[5/apr/2017] Version 1.8.3 released<ul>

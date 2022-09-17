@@ -1,5 +1,5 @@
 PKG= dado
-V= 2.0.0
+V= 2.1.0
 DIST_DIR= $(PKG)-$V
 HTMLS= doc/dado.png doc/index.html doc/license.html doc/examples.html
 BR_HTMLS= doc/br/dado.png doc/br/index.html doc/br/license.html doc/br/examples.html
