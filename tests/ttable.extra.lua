@@ -1,8 +1,8 @@
 #!/usr/local/bin/lua
 
-local tostring = tostring
-local table = require"table.extra"
+local original = require"table"
 local quote = require"dado.sql".quote
+local table = require"table.extra"
 
 -- fullconcat
 assert (table.fullconcat{} == "")
@@ -30,4 +30,10 @@ assert ( (k=="'a'-'q''w'" or k=="'q''w'-'a'") and
          (v=="((1))='a''b'" or v=="'a''b'=((1))") )
 io.write"."
 
-print(' '..table._VERSION.." Ok!")
+-- inherited functions
+for i, v in pairs(original) do
+	assert (table[i] == v)
+end
+io.write"."
+
+io.write(' '..table._VERSION.." Ok!\n")

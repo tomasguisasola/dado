@@ -5,7 +5,7 @@
 -- @name table.extra
 ---------------------------------------------------------------------
 
-local assert, pairs, type = assert, pairs, type
+local assert, pairs, require, setmetatable, type = assert, pairs, require, setmetatable, type
 
 local table = require"table"
 local tconcat, tsort = table.concat, table.sort
@@ -118,7 +118,7 @@ local function twostr (tab, ksep, vsep, kfilter, vfilter)
 end
 
 --------------------------------------------------------------------------------
-return {
+return setmetatable ({
 	_COPYRIGHT = "Copyright (C) 2008-2022 PUC-Rio",
 	_DESCRIPTION = "Table Extra contains some functions used to manipulate tables by other Dado modules",
 	_VERSION = "Table Extra 2.0.0",
@@ -126,4 +126,4 @@ return {
 	fullconcat = fullconcat,
 	pfullconcat = pfullconcat,
 	twostr = twostr,
-}
+}, { __index = table })
