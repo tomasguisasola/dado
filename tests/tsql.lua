@@ -84,11 +84,17 @@ local sub = sql.subselect("id", "usuario", "nome ilike "..sql.quote"tomas%")
 assert (sql.AND { id = sub } == [[id=((select id from usuario where nome ilike 'tomas%'))]], sql.AND { id = sub })
 io.write"."
 
+-- complex AND expression
+assert (sql.AND { id = { 123, sub, true, "abc" }} == [[id in (((123)),((select id from usuario where nome ilike 'tomas%')),((true)),'abc')]])
+assert (sql.AND { id = { 123, a = sub, true, "abc" }} == [[id in (((123)),((true)),'abc')]])
+io.write"."
+
 -- quotedconcat
 assert (sql.quotedconcat{} == '')
 assert (sql.quotedconcat{1,2} == "((1)),((2))")
 assert (sql.quotedconcat{ "INF", "ELE", "COM", } == "'INF','ELE','COM'")
 assert (sql.quotedconcat{ "ROBERTO D'ÁVILA", "JOSÉ D'ABREU", } == "'ROBERTO D''ÁVILA','JOSÉ D''ABREU'")
+assert (sql.quotedconcat{ 1, a=2, true, "abc" } == "((1)),((true)),'abc'")
 io.write"."
 
 -- integer check

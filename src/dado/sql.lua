@@ -5,6 +5,7 @@
 local string = require"string"
 local gsub, strformat = string.gsub, string.format
 local table = require"table.extra"
+local tconcat = table.concat
 local tabfullconcat, tabtwostr = table.fullconcat, table.twostr
 local type = type
 
@@ -57,15 +58,36 @@ end
 -- @return String in the for of a comma separated values.
 ---------------------------------------------------------------------
 local function quotedconcat (tab)
-	local _, r = tabtwostr (tab, nil, ',', nil, quote)
-	return r
+	local r = {}
+	for i = 1, #tab do
+		r[i] = quote(tab[i])
+	end
+	return tconcat (r, ',')
+end
+
+---------------------------------------------------------------------
+-- Quote with prefix to be used in AND.
+-- If the value is a table, produces a 'in (...)' expression, considering
+-- only the integer keys starting from 1; otherwise produces a regular
+-- '='..quote(value) expression.
+-- @param val String or number or boolean or table.
+-- @return String with the quoted value and a prefix (' in' for table
+--	values; '=' for other values).
+---------------------------------------------------------------------
+local function in_quote (val)
+	if type (val) == "table" then
+		return " in ("..quotedconcat(val)..")"
+	else
+		return "="..quote(val)
+	end
 end
 
 ---------------------------------------------------------------------
 -- Composes simple (almost trivial) SQL AND-expressions.
--- There is no "magic" in this funcion, except that it 'quotes' the
---	values.
--- Hence, for expressions which have any operator other than '=',
+-- There is only one single "magic" in this function: table values are
+-- considered arrays containing the values of an IN expression.
+-- All other values are simply quoted in the resulting string.
+-- Hence, for expressions which have any operator other than '=' and 'IN',
 --	you should write them explicitly.
 -- There is no OR-expression equivalent function (I don't know how to
 --	express it conveniently in Lua).
@@ -75,7 +97,7 @@ end
 -- @return String with the resulting expression.
 ---------------------------------------------------------------------
 local function AND (tab)
-	return tabfullconcat (tab, "=", " AND ", nil, quote)
+	return tabfullconcat (tab, "", " AND ", nil, in_quote)
 end
 
 ---------------------------------------------------------------------
@@ -185,7 +207,7 @@ end
 return {
 	_COPYRIGHT = "Copyright (C) 2008-2022 PUC-Rio",
 	_DESCRIPTION = "SQL is a collection of functions to create SQL statements",
-	_VERSION = "Dado SQL 2.0.0",
+	_VERSION = "Dado SQL 2.1.0",
 
 	quote = quote,
 	quotedconcat = quotedconcat,
