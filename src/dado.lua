@@ -62,6 +62,8 @@ end
 -- @param func Function to be executed inside the transaction (its first
 --	argument will be the connection object).
 -- @param ... Other arguments to the function (after the connection object).
+-- @return Boolean indicating whether the function executed without errors.
+-- @return All results produced by the function execution.
 --------------------------------------------------------------------------------
 function M.docommit (self, func, ...)
 	local tdb = type (self)
@@ -93,6 +95,8 @@ end
 -- @param func Function to be executed inside the transaction (its first
 --	argument will be the connection object).
 -- @param ... Other arguments to the function (after the connection object).
+-- @return Boolean indicating whether the function executed without errors.
+-- @return All results produced by the function execution.
 --------------------------------------------------------------------------------
 function M.dorollback (self, func, ...)
 	local tdb = type(self)
