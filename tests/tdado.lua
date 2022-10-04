@@ -148,9 +148,9 @@ io.write"."
 -- Protected transaction
 assert (pcall (db.docommit) == false, ":docommit() should throw an error when called without any arguments")
 assert (pcall (db.docommit, db) == false,
-	":docommit() shoud throw an error when called without a function as its first argument")
+	":docommit() should throw an error when called without a function as its first argument")
 assert (pcall (db.docommit, db, 1) == false,
-	":docommit() shoud throw an error when called without a function as its first argument")
+	":docommit() should throw an error when called without a function as its first argument")
 local ok, err = db:docommit (function (dbconn)
 	dbconn:insert ("tabela", {
 		campo1 = "committed",
