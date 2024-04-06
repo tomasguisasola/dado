@@ -122,4 +122,13 @@ assert (sql.isinteger(true) == false, "Couldn't reject boolean true")
 assert (sql.isinteger{} == false, "Couldn't reject table value")
 io.write"."
 
+-- alike expressions
+assert (sql.alike ("nome", "Tomás Guisasola") == "replace(upper(nome), ' ', '%') like replace(upper('%Tomás Guisasola%'), ' ', '%')")
+assert (sql.alike ("nome", "tomás", sql.alike_unaccent_template) == "replace(upper(unaccent(nome)), ' ', '%') like replace(upper(unaccent('%tomás%')), ' ', '%')")
+assert (sql.alike ("nome", "") == "nome = ''")
+-- does not work with subqueries as values
+--assert (sql.alike ("nome", sql.subselect("nome", "usuario", "id=1234")) == "replace(upper(nome), ' ', '%') like replace(upper(((select nome from usuario where id=1234))), ' ', '%')")
+assert (sql.alike ("nome", "'),' ',' '); delete not injected; select replace(upper('") == "replace(upper(nome), ' ', '%') like replace(upper('%''),'' '','' ''); delete not injected; select replace(upper(''%'), ' ', '%')")
+assert (sql.alike ("substring(nome from 1 fo 3)", "a c") == "replace(upper(substring(nome from 1 fo 3)), ' ', '%') like replace(upper('%a c%'), ' ', '%')")
+
 print(' '..sql._VERSION.." Ok!")

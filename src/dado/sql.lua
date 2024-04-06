@@ -10,6 +10,16 @@ local tabfullconcat, tabtwostr = table.fullconcat, table.twostr
 local type = type
 
 ---------------------------------------------------------------------
+local M = {
+	_COPYRIGHT = "Copyright (C) 2008-2024 PUC-Rio",
+	_DESCRIPTION = "SQL is a collection of functions to create SQL statements",
+	_VERSION = "Dado SQL 2.2.0",
+
+	alike_template = "replace(upper(%s), ' ', '%%') like replace(upper(%s), ' ', '%%')",
+	alike_unaccent_template = "replace(upper(unaccent(%s)), ' ', '%%') like replace(upper(unaccent(%s)), ' ', '%%')",
+}
+
+---------------------------------------------------------------------
 -- Escape a character or a character class in a string.
 -- It also removes character with codes < 32 (except \t (\9), \n (\10)
 --	and \r (\13)).
@@ -18,7 +28,7 @@ local type = type
 -- @param s String to be processed.
 -- @return String or nil if no string was given.
 ---------------------------------------------------------------------
-local function escape (s)
+function M.escape (s)
 	if not s then return end
 	s = gsub (s, "[%z\1\2\3\4\5\6\7\8\11\12\14\15\16\17\18\19\20\21\22\23\24\25\26\27\28\29\30\31]", "")
 	s = gsub (s, "'", "''")
@@ -34,7 +44,7 @@ end
 -- @param s String or number or boolean.
 -- @return String with quoted value.
 ---------------------------------------------------------------------
-local function quote (s)
+function M.quote (s)
 	local ts = type(s)
 	if ts == "number" or ts == "boolean" then
 		return strformat ("((%s))", s)
@@ -43,7 +53,7 @@ local function quote (s)
 		and s:match"^%b()$" and s:sub(2, -2):match"^%b()$" then
 		return s
 	else
-		return "'"..escape (s).."'"
+		return "'"..M.escape (s).."'"
 	end
 end
 
@@ -57,10 +67,10 @@ end
 -- @param tab Table with the sequence of values.
 -- @return String in the for of a comma separated values.
 ---------------------------------------------------------------------
-local function quotedconcat (tab)
+function M.quotedconcat (tab)
 	local r = {}
 	for i = 1, #tab do
-		r[i] = quote(tab[i])
+		r[i] = M.quote(tab[i])
 	end
 	return tconcat (r, ',')
 end
@@ -76,9 +86,9 @@ end
 ---------------------------------------------------------------------
 local function in_quote (val)
 	if type (val) == "table" then
-		return " in ("..quotedconcat(val)..")"
+		return " in ("..M.quotedconcat(val)..")"
 	else
-		return "="..quote(val)
+		return "="..M.quote(val)
 	end
 end
 
@@ -90,14 +100,34 @@ end
 -- Hence, for expressions which have any operator other than '=' and 'IN',
 --	you should write them explicitly.
 -- There is no OR-expression equivalent function (I don't know how to
---	express it conveniently in Lua).
+--	express it convenently in Lua).
 -- @class function
 -- @name AND
 -- @param tab Table with key-value pairs representing equalities.
 -- @return String with the resulting expression.
 ---------------------------------------------------------------------
-local function AND (tab)
+function M.AND (tab)
 	return tabfullconcat (tab, "", " AND ", nil, in_quote)
+end
+
+---------------------------------------------------------------------
+-- Composes a comparison expression based on the LIKE operator.
+-- @param exp String with the base-expression.
+-- @param value String with the literal or pattern-expression (it will
+--	be quoted; does not accept subselect).
+-- @param template String with the template of the expression
+--	(default = dado.sql.alike_template).
+-- @return String with a comparison expression.
+---------------------------------------------------------------------
+function M.alike (exp, value, template)
+	template = template or M.alike_template
+	if value and value:match"%S" then
+		-- not empty
+		return strformat (template, exp, M.quote('%'..value..'%'))
+	else
+		-- empty string
+		return exp.." = "..M.quote(value)
+	end
 end
 
 ---------------------------------------------------------------------
@@ -109,7 +139,7 @@ end
 -- @param id String with the key to check.
 -- @return Boolean or Number (any number can be considered as true) or nil.
 ---------------------------------------------------------------------
-local function isinteger (id)
+function M.isinteger (id)
 	local tid = type(id)
 	if tid == "string" then
 		return id:match"^%s*%-?%d+%s*$"
@@ -133,7 +163,7 @@ end
 -- @param extra String with extra SQL text (optional).
 -- @return String with SELECT command.
 ---------------------------------------------------------------------
-local function select (columns, tabname, cond, extra)
+function M.select (columns, tabname, cond, extra)
 	tabname  = tabname and (" from "..tabname) or ""
 	cond     = cond and (" where "..cond) or ""
 	extra    = extra and (" "..extra) or ""
@@ -151,8 +181,8 @@ end
 -- @param extra String with extra SQL text.
 -- @return String with SELECT command.
 ---------------------------------------------------------------------
-local function subselect (columns, tabname, cond, extra)
-	return "(("..select (columns, tabname, cond, extra).."))"
+function M.subselect (columns, tabname, cond, extra)
+	return "(("..M.select (columns, tabname, cond, extra).."))"
 end
 
 ---------------------------------------------------------------------
@@ -164,10 +194,10 @@ end
 -- @param contents Table of elements to be inserted (optional).
 -- @return String with INSERT command.
 ---------------------------------------------------------------------
-local function insert (tabname, contents)
+function M.insert (tabname, contents)
 	if contents then
 		return strformat ("insert into %s (%s) values (%s)",
-			tabname, tabtwostr (contents, ',', ',', nil, quote))
+			tabname, tabtwostr (contents, ',', ',', nil, M.quote))
 	else
 		return strformat ("insert into %s", tabname)
 	end
@@ -182,10 +212,10 @@ end
 -- @param cond String with where-clause (and following SQL text).
 -- @return String with UPDATE command.
 ---------------------------------------------------------------------
-local function update (tabname, contents, cond)
+function M.update (tabname, contents, cond)
 	cond = cond and (" where "..cond) or ""
 	local set = contents
-		and " set "..tabfullconcat (contents, '=', ',', nil, quote)
+		and " set "..tabfullconcat (contents, '=', ',', nil, M.quote)
 		or ""
 	return strformat ("update %s%s%s", tabname, set, cond)
 end
@@ -198,26 +228,10 @@ end
 -- @param cond String with where-clause (and following SQL text).
 -- @return String with DELETE command.
 ---------------------------------------------------------------------
-local function delete (tabname, cond)
+function M.delete (tabname, cond)
 	cond = cond and (" where "..cond) or ""
 	return strformat ("delete from %s%s", tabname, cond)
 end
 
 --------------------------------------------------------------------------------
-return {
-	_COPYRIGHT = "Copyright (C) 2008-2022 PUC-Rio",
-	_DESCRIPTION = "SQL is a collection of functions to create SQL statements",
-	_VERSION = "Dado SQL 2.1.0",
-
-	quote = quote,
-	quotedconcat = quotedconcat,
-	escape = escape,
-	AND = AND,
-	isinteger = isinteger,
-
-	select = select,
-	subselect = subselect,
-	insert = insert,
-	update = update,
-	delete = delete,
-}
+return M

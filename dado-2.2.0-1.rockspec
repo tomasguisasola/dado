@@ -1,6 +1,6 @@
 package = "Dado"
 
-version = "2.1.0-1"
+version = "2.2.0-1"
 
 description = {
    summary = "Database Facilities for LuaSQL",
