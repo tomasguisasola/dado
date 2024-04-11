@@ -84,7 +84,7 @@ end
 -- @return String with the quoted value and a prefix (' in' for table
 --	values; '=' for other values).
 ---------------------------------------------------------------------
-local function in_quote (val)
+function M.in_quote (val)
 	if type (val) == "table" then
 		return " in ("..M.quotedconcat(val)..")"
 	else
@@ -107,7 +107,7 @@ end
 -- @return String with the resulting expression.
 ---------------------------------------------------------------------
 function M.AND (tab)
-	return tabfullconcat (tab, "", " AND ", nil, in_quote)
+	return tabfullconcat (tab, "", " AND ", nil, M.in_quote)
 end
 
 ---------------------------------------------------------------------
