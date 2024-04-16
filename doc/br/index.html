@@ -80,7 +80,7 @@ Entretanto é fácil definir atributos que não sejam relacionados com colunas d
 <h2><a name="status"></a>Status</h2>
 
 <p>
-A versão atual é a 2.0.0.
+A versão atual é a 2.2.0.
 Ela foi desenvolvida para rodar em todas as versões de Lua 5.X.
 </p>
 
@@ -113,6 +113,12 @@ A <a href="../luadoc/index.html">API</a> é documentada através do LDoc e só e
 <h2><a name="history"></a>Histórico</h2>
 
 <ul>
+    <li>[16/abr/2024] Lançamento da versão 2.2.0<br/>
+        Acréscimo das funções <a href="luadoc/modules/dado.sql.html#alike"><code>dado.sql.alike</code></a> e <a href="luadoc/modules/dado.sql.html#in_quote"><code>dado.sql.in_quote</code></a></li>
+    <li>[17/set/2022] Lançamento da versão 2.1.0<ul>
+        <li>Melhoria na função <a href="luadoc/modules/dado.sql.html#AND"><code>dado.sql.AND</code></a> para permitir que uma tabela (array sem buracos) seja usada para passar uma série de valores e formar uma expressão-IN.</li>
+        <li>Acréscimo de mecanismo de herança ao módulo <a href="luadoc/modules/table.extra.html"><code>table.extra</code></a>, de modo que ele possa ser carregado no lugar da biblioteca-padrão <code>table</code> original de Lua.</li>
+    </ul></li>
     <li>[27/jul/2022] Lançamento da versão 2.0.0<br/>
         Acréscimo das funções <a href="../luadoc/modules/dado.html#docommit"><code>dado.docommit</code></a> e <a href="../luadoc/modules/dado.html#dorollback"><code>dado.dorollback</code></a></li>
     <li>[5/abr/2017] Lançamento da versão 1.8.3<ul>

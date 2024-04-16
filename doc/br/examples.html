@@ -51,7 +51,7 @@
 O exemplo abaixo mostra o uso básico do pacote.
 </p>
 <pre class="example">
-local dado = require"dado"
+dado = require"dado"
 db = dado.connect ("dbname", "username")
 db.conn:execute ("drop table mytable") -- uso direto da LuaSQL, para que o comando possa falhar sem interromper a execução.
 db:assertexec [[
@@ -74,7 +74,7 @@ for index, record in ipairs(data) do
 end
 
 -- Update
-local r = data[2]
+r = data[2]
 r.field1 = "field2"
 db:update ("mytable", r, "key = "..r.key)
 
@@ -118,10 +118,11 @@ db = dado.connect ("dbname", "username")
 cond = sql.AND {
 	field1 = "val1",
 	field2 = sql.subselect ("field2", "mytable", "key = 1"),
+	key = { 1, 2, 4, },
 }
 
-for field1, field2 in db:select ("field1, field2", "mytable", cond)() do
-	print (field1, field2)
+for key, f1, f2 in db:select ("key, field1, field2", "mytable", cond)() do
+	print (key, f1, f2)
 end
 </pre>
 
