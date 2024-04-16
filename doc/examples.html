@@ -116,12 +116,13 @@ sql = require"dado.sql"
 db = dado.connect ("dbname", "username")
 
 cond = sql.AND {
-	field1 = "val1",
-	field2 = sql.subselect ("field2", "mytable", "key = 1"),
-}
+	col1 = "val1",
+	col2 = sql.subselect ("col2", "mytable", "key = 1"),
+	col3 = { 1, 2, 3, },
+} --> "col1 = 'val1' AND col2 = ((select col2 from mytable where key = 1)) AND col3 in (1, 2, 3)"
 
-for field1, field2 in db:select ("field1, field2", "mytable", cond)() do
-	print (field1, field2)
+for c1, c2, c3 in db:select ("col1, col2, col3", "mytable", cond)() do
+	print (c1, c2, c3)
 end
 </pre>
 
